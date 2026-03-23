@@ -24,7 +24,10 @@ export default function Header({
           </TouchableOpacity>
         )}
         {showMenu && (
-          <TouchableOpacity onPress={() => router.back()} className="mr-3">
+          <TouchableOpacity
+            onPress={() => console.log("menu opened")}
+            className="mr-3"
+          >
             <Ionicons name="menu" size={24} color={COLORS.primary} />
           </TouchableOpacity>
         )}

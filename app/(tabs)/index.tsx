@@ -3,6 +3,7 @@ import CategoryItem from "@/components/CategoryItem";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { CATEGORIES, COLORS } from "@/constants";
+import { Product } from "@/constants/types";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import {
@@ -33,7 +34,7 @@ export default function Index() {
   return (
     <SafeAreaView className="flex-1" edges={["top"]}>
       <Header showLogo showMenu showCart showBack={false} />
-      <ScrollView className="flex-1 px-4" showsVericalScrollIndicator={false}>
+      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
         {/* Banner Slider  */}
         <View className=" mb-6">
           <ScrollView

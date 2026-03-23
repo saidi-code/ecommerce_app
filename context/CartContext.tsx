@@ -20,7 +20,7 @@ type CartContextType = {
   ) => Promise<void>;
   clearCart: () => Promise<void>;
   cartTotal: number;
-  itemCont: number;
+  itemCount: number;
   isLoading: boolean;
 };
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -69,7 +69,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateCartItemQuantity,
         clearCart,
         cartTotal,
-        itemCont: itemCount,
+        itemCount: itemCount,
         isLoading,
         cartItems,
       }}

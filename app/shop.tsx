@@ -21,7 +21,10 @@ export default function Shop() {
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
+  const fetchInFlight = React.useRef(false);
   const fetchProducts = async (pageNumber: number = 1) => {
+    if (fetchInFlight.current) return;
+    fetchInFlight.current = true;
     if (pageNumber === 1) {
       setLoading(true);
     } else {
@@ -41,12 +44,13 @@ export default function Shop() {
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
+      fetchInFlight.current = false;
       setLoading(false);
       setLoadingMore(false);
     }
   };
   const loadMore = () => {
-    if (!loadingMore && !loading && hasMore) {
+    if (!loading && !loadingMore && hasMore && !fetchInFlight.current) {
       fetchProducts(page + 1);
     }
   };

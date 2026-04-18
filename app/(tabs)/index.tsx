@@ -36,7 +36,7 @@ export default function Index() {
       <Header showLogo showMenu showCart showBack={false} />
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
         {/* Banner Slider  */}
-        <View className=" mb-6">
+        <View className=" my-6">
           <ScrollView
             horizontal
             pagingEnabled

@@ -15,9 +15,9 @@ export default function Header({
   const router = useRouter();
   const { itemCount } = { itemCount: 6 };
   return (
-    <View className="flex-row  items-center justify-between px-4 py-3 bg-white shadow">
+    <View className=" flex flex-row  items-center justify-between px-4 py-5 bg-white shadow">
       {/* left side */}
-      <View className="flex-row items-center flex-1 ">
+      <View className="flex flex-row items-center flex-1 ">
         {showBack && (
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
             <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
@@ -28,14 +28,14 @@ export default function Header({
             onPress={() => console.log("menu opened")}
             className="mr-3"
           >
-            <Ionicons name="menu" size={24} color={COLORS.primary} />
+            <Ionicons name="menu-outline" size={24} color={COLORS.primary} />
           </TouchableOpacity>
         )}
         {showLogo ? (
           <View className="flex-1">
             <Image
               source={require("@/assets/images/logo.png")}
-              style={{ width: "100%", height: 22 }}
+              style={{ width: "100%", height: 18 }}
               resizeMode="contain"
             />
           </View>

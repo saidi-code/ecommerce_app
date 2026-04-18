@@ -64,7 +64,7 @@ export default function ProductDetails() {
     addToCart(product, selectedSize || "");
   };
   return (
-    <View className="flex-1 bg-white ">
+    <SafeAreaView className="flex-1 bg-white ">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Image Carousel */}
         <View className="relative h-[450px]  bg-gray-100 mb-6">
@@ -173,7 +173,7 @@ export default function ProductDetails() {
         </View>
       </ScrollView>
       {/* Footer */}
-      <View className="absolute bottom-0 left-0 flex-row right-0 p-4 bg-white border-t boder-gray-100">
+      <View className="absolute bottom-8 right-0 left-0 flex-row  p-4 bg-white border-t boder-gray-100">
         <TouchableOpacity
           onPress={handleAddToCart}
           className="w-4/5 bg-primary py-4 rounded-full items-center shadow-lg flex-row justify-center"
@@ -193,6 +193,6 @@ export default function ProductDetails() {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

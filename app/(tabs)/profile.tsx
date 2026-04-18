@@ -1,17 +1,19 @@
 import Header from "@/components/Header";
 import { COLORS, PROFILE_MENU } from "@/constants";
+import { useClerk } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { dummyUser } from "./assets";
-import { dummyUser } from "@/assets/assets";
 export default function Profile() {
-  const { user } = { user: dummyUser };
+  // const { user } = { user: dummyUser };
+  const { user, signOut } = useClerk();
   const router = useRouter();
   const handleLogout = async () => {
-    router.replace("/sing-in");
+    await signOut();
+    router.replace("/(auth)/sign-in");
   };
   return (
     <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
@@ -37,7 +39,7 @@ export default function Profile() {
               Log in to view your profile,orders,and address.
             </Text>
             <TouchableOpacity
-              onPress={() => router.push("/sing-in")}
+              onPress={() => router.push("/(auth)/sign-in")}
               className="bg-primary w-3/5 py-3 rounded-full items-center shadow-lg"
             >
               <Text className="text-white font-bold text-lg">

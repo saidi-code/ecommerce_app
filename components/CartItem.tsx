@@ -8,7 +8,12 @@ export default function CartItem({
   onRemove,
   onUpdateQuantity,
 }: CartItemProps) {
-  const imgUrl = item.product?.images[0] ?? "";
+  const imgUrl = item?.product?.images?.[0];
+  const quantity = item?.quantity;
+  const price = item?.product?.price;
+  const name = item?.product?.name ?? "Unknown Product";
+  const size = item?.size;
+
   return (
     <View className="flex-row mb-4 p-3 rounded-xl">
       <View className="w-20 h-20  bg-gray-100 rounded-lg overflow-hidden mr-3">
@@ -26,32 +31,30 @@ export default function CartItem({
         <View className="flex-row justify-between items-start">
           <View>
             <Text className="text-primary font-medium text-sm mb-1">
-              {item.product?.name}
+              {name}
             </Text>
-            <Text className="text-secondary text-xs">
-              Size: {item.size ?? "N/A"}
-            </Text>
+            <Text className="text-secondary text-xs">Size: {size}</Text>
             {/* Price and quantity */}
             <View className="flex-row justify-between items-center mt-2">
               <Text className="text-primary font-bold text-base">
-                ${item.product.price.toFixed(2)}
+                ${price?.toFixed(2)}
               </Text>
               <View className="flex-row items-center bg-surface rounded-full px-2 py-1">
                 <TouchableOpacity
                   className="p-1"
                   onPress={() =>
-                    onUpdateQuantity && onUpdateQuantity(item.quantity - 1)
+                    onUpdateQuantity && onUpdateQuantity(quantity - 1)
                   }
                 >
                   <Ionicons name="remove" size={16} color={COLORS.primary} />
                 </TouchableOpacity>
                 <Text className="text-primary font-medium mx-3">
-                  {item.quantity}
+                  {quantity}
                 </Text>
                 <TouchableOpacity
                   className="p-1"
                   onPress={() =>
-                    onUpdateQuantity && onUpdateQuantity(item.quantity + 1)
+                    onUpdateQuantity && onUpdateQuantity(quantity + 1)
                   }
                 >
                   <Ionicons name="add" size={16} color={COLORS.primary} />

@@ -22,7 +22,7 @@ export default function Page() {
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [code, setCode] = React.useState("");
-
+  const [showPassword, setShowPassword] = React.useState(true);
   const handleSubmit = async () => {
     const { error } = await signIn.password({
       emailAddress,
@@ -42,7 +42,6 @@ export default function Page() {
             console.log(session?.currentTask);
             return;
           }
-
           const url = decorateUrl("/");
           if (url.startsWith("http")) {
             window.location.href = url;
@@ -99,15 +98,22 @@ export default function Page() {
   {
     return signIn.status === "needs_client_trust" ? (
       <SafeAreaView className="flex-1 bg-white" style={{ padding: 28 }}>
-        <View className="flex-row  items-center mb-8">
-          <TouchableOpacity onPress={() => router.push("/")}>
-            <View className="rounded-full flex-row items-center shadow-sm bg-primary px-4 py-2 ">
-              <Ionicons name="arrow-back-circle" size={24} color="#fff" />
-              <Text className="text-lg font-bold ml-1 text-white ">Back</Text>
-            </View>
-          </TouchableOpacity>
+        <View className=" flex flex-row  items-center justify-between px-4 py-5 bg-white shadow">
+          <View className="flex flex-row items-center flex-1 ">
+            <TouchableOpacity onPress={() => router.push("/")}>
+              <View className="rounded-full flex-row items-center shadow-sm bg-primary px-4 py-2 ">
+                <Ionicons name="arrow-back-circle" size={24} color="#fff" />
+                <Text className="text-lg font-bold ml-1 text-white ">Back</Text>
+              </View>
+            </TouchableOpacity>
+
+            <Text className="text-xl font-bold text-primary text-center flex-1 mr-8">
+              Verify your account
+            </Text>
+          </View>
         </View>
-        <View className="justify-center items-center mb-6 ">
+
+        {/* <View className="justify-center items-center mb-6 ">
           <View className="items-center mb-2">
             <Text className="text-3xl font-bold text-primary">
               Verify your account
@@ -118,7 +124,7 @@ export default function Page() {
             style={{ width: "100%", height: 18, marginBottom: 8 }}
             resizeMode="contain"
           />
-        </View>
+        </View> */}
 
         <TextInput
           style={styles.input}
@@ -166,28 +172,32 @@ export default function Page() {
     ) : (
       <SafeAreaView className="flex-1 bg-white" style={{ padding: 28 }}>
         {/* Header */}
-        <View className="flex-row  items-center mb-8">
-          <TouchableOpacity onPress={() => router.push("/")}>
-            <View className="rounded-full flex-row items-center shadow-sm bg-primary px-4 py-2 ">
-              <Ionicons name="arrow-back-circle" size={24} color="#fff" />
-              <Text className="text-lg font-bold ml-1 text-white ">Back</Text>
-            </View>
-          </TouchableOpacity>
+        <View className=" flex flex-row  items-center justify-between border-b border-slate-200  pb-2 bg-white ">
+          <View className="flex flex-row items-center  ">
+            <TouchableOpacity onPress={() => router.push("/")}>
+              <View className="rounded-full flex-row items-center shadow-sm bg-primary px-4 py-2 ">
+                <Ionicons name="arrow-back-circle" size={24} color="#fff" />
+                <Text className="text-lg font-bold ml-1 text-white ">Back</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text className="text-xl font-bold text-primary text-center flex-1 mr-8">
+            Sign in
+          </Text>
         </View>
-
         {/* Content */}
         <ScrollView
           className="flex-1"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className="justify-center items-center mb-8 ">
-            <View className="items-center mb-2">
+          <View className="justify-center items-center my-16 ">
+            {/* <View className="items-center mb-2">
               <Text className="text-3xl font-bold text-primary">
                 Welcome Back
               </Text>
               <Text className="text-secondary mb-2 ">Sign in to continue</Text>
-            </View>
+            </View> */}
             <Image
               source={require("@/assets/images/logo.png")}
               style={{ width: "100%", height: 18, marginBottom: 8 }}
@@ -204,27 +214,50 @@ export default function Page() {
             onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
             keyboardType="email-address"
           />
+
           {errors.fields.identifier && (
             <Text className="text-xs text-accent mt-1">
               {errors.fields.identifier.message}
             </Text>
           )}
           <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            value={password}
-            placeholder="Enter password"
-            placeholderTextColor="#666666"
-            secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)}
-          />
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: "#ccc",
+              borderRadius: 8,
+
+              backgroundColor: "#fff",
+              marginBottom: 16,
+              paddingHorizontal: 12,
+              paddingVertical: 3,
+            }}
+            className="flex-row items-center justify-between relative"
+          >
+            <TextInput
+              className="flex-1 text-primary text-[16px]"
+              value={password}
+              placeholder="Enter password"
+              placeholderTextColor="#666666"
+              secureTextEntry={!showPassword}
+              onChangeText={(password) => setPassword(password)}
+            />
+            <Ionicons
+              name="eye-outline"
+              size={20}
+              color="#666666"
+              className="mr-3"
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          </View>
+
           {errors.fields.password && (
             <Text className="text-xs text-accent mt-1">
               {errors.fields.password.message}
             </Text>
           )}
           <TouchableOpacity
-            className={`bg-primary mt-8 w-full py-3 rounded-full items-center shadow-lg ${fetchStatus === "fetching" || !emailAddress || !password ? "opacity-50" : "opacity-100"}`}
+            className={`bg-primary mt-6 w-full py-3 rounded-full items-center shadow-lg ${fetchStatus === "fetching" || !emailAddress || !password ? "opacity-50" : "opacity-100"}`}
             disabled={!emailAddress || !password || fetchStatus === "fetching"}
             onPress={handleSubmit}
           >
@@ -239,11 +272,15 @@ export default function Page() {
             <Text style={styles.debug}>{JSON.stringify(errors, null, 2)}</Text>
           )} */}
 
-          <View style={styles.linkContainer}>
-            <Text>Don&apos;t have an account? </Text>
+          <View className="flex-row justify-start mt-2">
+            <Text className="text-sm font-medium text-secondary">
+              Don&apos;t have an account?{" "}
+            </Text>
 
             <Link href="/sign-up">
-              <Text>Sign up</Text>
+              <Text className="text-sm font-medium text-blue-400 underline">
+                Sign up
+              </Text>
             </Link>
           </View>
         </ScrollView>

@@ -43,18 +43,18 @@ export default function ProductCard({ product }: ProductCardProps) {
           <View className="flex-row items-center">
             <Ionicons name="star" size={14} color="#FFD700" />
             <Text className="text-xs text-secondary ml-1">
-              {product.ratings.average.toFixed(1)}
+              {product?.ratings?.average.toFixed(1)}
             </Text>
           </View>
           <Text
             className="text-sm font-medium text-primary  mb-1 "
             numberOfLines={1}
           >
-            {product.name}
+            {product?.name}
           </Text>
           <View>
             <Text className=" font-bold text-primary text-base">
-              ${product.price.toFixed(2)}
+              ${product?.price.toFixed(2)}
             </Text>
           </View>
         </View>

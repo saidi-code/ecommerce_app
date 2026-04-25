@@ -1,4 +1,3 @@
-import { dummyProducts } from "@/assets/assets";
 import { COLORS } from "@/constants";
 import { Product } from "@/constants/types";
 import { useCart } from "@/context/CartContext";
@@ -17,6 +16,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import axios from "../../constants/api";
 export default function ProductDetails() {
   const { id } = useLocalSearchParams();
   const width = Dimensions.get("window").width;
@@ -28,12 +28,34 @@ export default function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const fetchProduct = async () => {
-    setProduct(dummyProducts.find((p) => p._id === id) as any);
-    setLoading(false);
+    try {
+      const { data } = await axios.get(`/products/${id}`);
+      if (data.success) {
+        setProduct(data.data);
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Failed to load product",
+          text2:
+            data.message || "An error occurred while fetching product details",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error fetching product details:", error);
+      Toast.show({
+        type: "error",
+        text1: "Failed to load product",
+        text2: "An error occurred while fetching product details",
+      });
+    } finally {
+      setLoading(false);
+    }
+    // setProduct(dummyProducts.find((p) => p._id === id) as any);
+    // setLoading(false);
   };
   useEffect(() => {
     fetchProduct();
-  }, []);
+  }, [id]);
   if (loading) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center">
@@ -130,10 +152,10 @@ export default function ProductDetails() {
             <View className="flex-row items-start justify-between mb-2">
               <Ionicons name="star" size={16} color="#FFD700" />
               <Text className="text-sm font-bold text-secondary ml-1">
-                {product.ratings.average.toFixed(1)}
+                {product?.ratings?.average.toFixed(1)}
               </Text>
               <Text className="text-xs text-secondary ml-1">
-                ({product.ratings.count})
+                ({product?.ratings?.count})
               </Text>
             </View>
           </View>

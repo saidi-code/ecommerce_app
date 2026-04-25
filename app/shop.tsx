@@ -1,4 +1,3 @@
-import { dummyProducts } from "@/assets/assets";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { COLORS } from "@/constants";
@@ -6,15 +5,16 @@ import { Product } from "@/constants/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import axios from "../constants/api";
 export default function Shop() {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -31,23 +31,47 @@ export default function Shop() {
       setLoadingMore(true);
     }
     try {
-      const start = (pageNumber - 1) * 10;
-      const end = start + 10;
-      const paginatedData = dummyProducts.slice(start, end);
+      const queryParams: any = { page: pageNumber, limit: 10 };
+      const { data } = await axios.get("/products", { params: queryParams });
       if (pageNumber === 1) {
-        setProducts(paginatedData);
+        setProducts(data.data);
       } else {
-        setProducts((prev) => [...prev, ...paginatedData]);
+        setProducts((prev) => [...prev, ...data.data]);
       }
-      setHasMore(end < dummyProducts.length);
+      setHasMore(data.pagination.page < data.pagination.pages);
       setPage(pageNumber);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching products:", error);
     } finally {
       fetchInFlight.current = false;
       setLoading(false);
       setLoadingMore(false);
     }
+    // if (fetchInFlight.current) return;
+    // fetchInFlight.current = true;
+    // if (pageNumber === 1) {
+    //   setLoading(true);
+    // } else {
+    //   setLoadingMore(true);
+    // }
+    // try {
+    //   const start = (pageNumber - 1) * 10;
+    //   const end = start + 10;
+    //   const paginatedData = dummyProducts.slice(start, end);
+    //   if (pageNumber === 1) {
+    //     setProducts(paginatedData);
+    //   } else {
+    //     setProducts((prev) => [...prev, ...paginatedData]);
+    //   }
+    //   setHasMore(end < dummyProducts.length);
+    //   setPage(pageNumber);
+    // } catch (error) {
+    //   console.error("Error fetching products:", error);
+    // } finally {
+    //   fetchInFlight.current = false;
+    //   setLoading(false);
+    //   setLoadingMore(false);
+    // }
   };
   const loadMore = () => {
     if (!loading && !loadingMore && hasMore && !fetchInFlight.current) {
@@ -100,10 +124,16 @@ export default function Shop() {
           onEndReachedThreshold={0.5}
           ListFooterComponent={
             loadingMore ? (
-              <View>
+              <View className="bg-red-400 flex-1">
                 <ActivityIndicator size="small" color={COLORS.primary} />
               </View>
-            ) : null
+            ) : (
+              <View className="items-center justify-center mt-4">
+                <Text className="text-secondary *:text-sm">
+                  No more products to load{" "}
+                </Text>
+              </View>
+            )
           }
           ListEmptyComponent={
             !loading && (

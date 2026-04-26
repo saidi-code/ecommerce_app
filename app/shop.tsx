@@ -1,4 +1,3 @@
-import { dummyProducts } from "@/assets/assets";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { COLORS } from "@/constants";
@@ -6,15 +5,16 @@ import { Product } from "@/constants/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import axios from "../constants/api";
 export default function Shop() {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -31,23 +31,47 @@ export default function Shop() {
       setLoadingMore(true);
     }
     try {
-      const start = (pageNumber - 1) * 10;
-      const end = start + 10;
-      const paginatedData = dummyProducts.slice(start, end);
+      const queryParams: any = { page: pageNumber, limit: 10 };
+      const { data } = await axios.get("/products", { params: queryParams });
       if (pageNumber === 1) {
-        setProducts(paginatedData);
+        setProducts(data.data);
       } else {
-        setProducts((prev) => [...prev, ...paginatedData]);
+        setProducts((prev) => [...prev, ...data.data]);
       }
-      setHasMore(end < dummyProducts.length);
+      setHasMore(data.pagination.page < data.pagination.pages);
       setPage(pageNumber);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching products:", error);
     } finally {
       fetchInFlight.current = false;
       setLoading(false);
       setLoadingMore(false);
     }
+    // if (fetchInFlight.current) return;
+    // fetchInFlight.current = true;
+    // if (pageNumber === 1) {
+    //   setLoading(true);
+    // } else {
+    //   setLoadingMore(true);
+    // }
+    // try {
+    //   const start = (pageNumber - 1) * 10;
+    //   const end = start + 10;
+    //   const paginatedData = dummyProducts.slice(start, end);
+    //   if (pageNumber === 1) {
+    //     setProducts(paginatedData);
+    //   } else {
+    //     setProducts((prev) => [...prev, ...paginatedData]);
+    //   }
+    //   setHasMore(end < dummyProducts.length);
+    //   setPage(pageNumber);
+    // } catch (error) {
+    //   console.error("Error fetching products:", error);
+    // } finally {
+    //   fetchInFlight.current = false;
+    //   setLoading(false);
+    //   setLoadingMore(false);
+    // }
   };
   const loadMore = () => {
     if (!loading && !loadingMore && hasMore && !fetchInFlight.current) {
@@ -58,9 +82,9 @@ export default function Shop() {
     fetchProducts(1);
   }, []);
   return (
-    <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-surface" edges={["bottom"]}>
       <Header title="Shop" showBack showCart />
-      <View className="flex-row gap-2 mb-3 mx-4 my-2">
+      <View className="flex-row  items-center gap-2 mb-3 mx-4 my-6">
         {/* Search bar */}
         <View className="flex-1 flex-row items-center bg-white rounded-xl border border-gray-100">
           <Ionicons
@@ -77,10 +101,11 @@ export default function Shop() {
           />
         </View>
         {/* Filter Icon*/}
-        <TouchableOpacity className="bg-gray-800 w-12 h-12 items-center justify-center rounded-xl">
+        <TouchableOpacity className="bg-gray-800 w-11 h-11 items-center justify-center rounded-xl">
           <Ionicons name="options-outline" size={24} color="#FFF" />
         </TouchableOpacity>
       </View>
+
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color={COLORS.primary} />
@@ -92,7 +117,6 @@ export default function Shop() {
           numColumns={2}
           contentContainerStyle={{
             padding: 16,
-            paddingBottom: 100,
           }}
           columnWrapperStyle={{ justifyContent: "space-between" }}
           renderItem={({ item }) => <ProductCard product={item} />}
@@ -100,10 +124,19 @@ export default function Shop() {
           onEndReachedThreshold={0.5}
           ListFooterComponent={
             loadingMore ? (
-              <View>
+              <View className="flex-1 flex-row items-center justify-center mt-4">
+                <Text className="text-secondary mr-2 text-sm">
+                  Loading more products...
+                </Text>
                 <ActivityIndicator size="small" color={COLORS.primary} />
               </View>
-            ) : null
+            ) : (
+              <View className="items-center justify-center mt-4">
+                <Text className="text-secondary *:text-sm">
+                  No more products to load{" "}
+                </Text>
+              </View>
+            )
           }
           ListEmptyComponent={
             !loading && (

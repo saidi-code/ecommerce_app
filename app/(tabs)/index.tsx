@@ -1,4 +1,4 @@
-import { BANNERS, dummyProducts } from "@/assets/assets";
+import { BANNERS } from "@/assets/assets";
 import CategoryItem from "@/components/CategoryItem";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
@@ -16,7 +16,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import axios from "../../constants/api";
 const { width } = Dimensions.get("window");
 export default function Index() {
   const router = useRouter();
@@ -25,8 +25,20 @@ export default function Index() {
   const [loading, setLoading] = React.useState(true);
   const categories = [{ id: "all", name: "all", icon: "grid" }, ...CATEGORIES];
   const fetchProducts = async () => {
-    setProducts(dummyProducts);
-    setLoading(false);
+    try {
+      const { data } = await axios.get("/products", {
+        params: { limit: 8, sort: "popular" },
+      });
+      if (data.success) {
+        setProducts(data.data);
+      }
+    } catch (error) {
+      console.error("error fetching product", error);
+    } finally {
+      setLoading(false);
+    }
+    // setProducts(dummyProducts);
+    // setLoading(false);
   };
   useEffect(() => {
     fetchProducts();

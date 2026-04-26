@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useCart } from "../context/CartContext";
 export default function Header({
   title,
   showBack,
@@ -13,7 +14,7 @@ export default function Header({
   showMenu,
 }: HeaderProps) {
   const router = useRouter();
-  const { itemCount } = { itemCount: 6 };
+  const { itemCount } = useCart();
   return (
     <View className=" flex flex-row  items-center justify-between px-4 py-5 bg-white shadow">
       {/* left side */}

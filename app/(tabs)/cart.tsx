@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Cart() {
   const { cartItems, cartTotal, removeFromCart, updateCartItemQuantity } =
     useCart();
+
   const router = useRouter();
   const shipping = 2.0;
   const total = cartTotal + shipping;
@@ -25,9 +26,9 @@ export default function Cart() {
               <CartItem
                 key={index}
                 item={item}
-                onRemove={() => removeFromCart(item.id, item.size)}
+                onRemove={() => removeFromCart(item.productId, item.size)}
                 onUpdateQuantity={(q) =>
-                  updateCartItemQuantity(item.id, item.size, q)
+                  updateCartItemQuantity(item.productId, item.size, q)
                 }
               />
             ))}

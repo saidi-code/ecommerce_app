@@ -1,5 +1,5 @@
 import { CartProvider } from "@/context/CartContext";
-import { WishListProvider } from "@/context/WishListContext";
+import { WishlistProvider } from "@/context/WishListContext";
 import "@/global.css";
 import { ClerkProvider } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
@@ -17,10 +17,10 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
         <CartProvider>
-          <WishListProvider>
+          <WishlistProvider>
             <Stack screenOptions={{ headerShown: false }} />
             <Toast />
-          </WishListProvider>
+          </WishlistProvider>
         </CartProvider>
       </ClerkProvider>
     </GestureHandlerRootView>

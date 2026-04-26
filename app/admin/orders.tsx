@@ -16,6 +16,7 @@ import {
 import axios from "@/constants/api";
 import { useAuth } from "@clerk/expo";
 import Toast from "react-native-toast-message";
+// import { dummyUser } from "../(tabs)/assets";
 export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -43,12 +44,20 @@ export default function AdminOrders() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setOrders(
-        data.data.map((order: any) => ({
-          ...order,
-          user: order.user || { name: "Unknown User", email: "No email" },
-        })),
-      );
+      if (data.success) {
+        setOrders(
+          data.data.map((order: any) => ({
+            ...order,
+            user: order.user || { name: "Unknown User", email: "No email" },
+          })) as any,
+        );
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Failed to Load Orders",
+          text2: data.message || "An error occurred while fetching orders",
+        });
+      }
     } catch (error: any) {
       console.error("Failed to load orders", error);
     } finally {

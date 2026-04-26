@@ -82,9 +82,9 @@ export default function Shop() {
     fetchProducts(1);
   }, []);
   return (
-    <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-surface" edges={["bottom"]}>
       <Header title="Shop" showBack showCart />
-      <View className="flex-row gap-2 mb-3 mx-4 my-2">
+      <View className="flex-row  items-center gap-2 mb-3 mx-4 my-6">
         {/* Search bar */}
         <View className="flex-1 flex-row items-center bg-white rounded-xl border border-gray-100">
           <Ionicons
@@ -101,10 +101,11 @@ export default function Shop() {
           />
         </View>
         {/* Filter Icon*/}
-        <TouchableOpacity className="bg-gray-800 w-12 h-12 items-center justify-center rounded-xl">
+        <TouchableOpacity className="bg-gray-800 w-11 h-11 items-center justify-center rounded-xl">
           <Ionicons name="options-outline" size={24} color="#FFF" />
         </TouchableOpacity>
       </View>
+
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color={COLORS.primary} />
@@ -116,7 +117,6 @@ export default function Shop() {
           numColumns={2}
           contentContainerStyle={{
             padding: 16,
-            paddingBottom: 100,
           }}
           columnWrapperStyle={{ justifyContent: "space-between" }}
           renderItem={({ item }) => <ProductCard product={item} />}
@@ -124,7 +124,10 @@ export default function Shop() {
           onEndReachedThreshold={0.5}
           ListFooterComponent={
             loadingMore ? (
-              <View className="bg-red-400 flex-1">
+              <View className="flex-1 flex-row items-center justify-center mt-4">
+                <Text className="text-secondary mr-2 text-sm">
+                  Loading more products...
+                </Text>
                 <ActivityIndicator size="small" color={COLORS.primary} />
               </View>
             ) : (

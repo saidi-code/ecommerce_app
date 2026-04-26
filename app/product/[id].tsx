@@ -1,7 +1,7 @@
 import { COLORS } from "@/constants";
 import { Product } from "@/constants/types";
 import { useCart } from "@/context/CartContext";
-import { useWishList } from "@/context/WishListContext";
+import { useWishlist } from "@/context/WishListContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -24,7 +24,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const { addToCart, cartItems, itemCount } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishList();
+  const { isInWishlist, removeFromWishlist, addToWishlist } = useWishlist();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const fetchProduct = async () => {
@@ -85,6 +85,13 @@ export default function ProductDetails() {
     }
     addToCart(product, selectedSize || "");
   };
+  const handleWishlistToggle = async () => {
+    if (isInWishlist(product._id)) {
+      await removeFromWishlist(product._id);
+    } else {
+      await addToWishlist(product);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-white ">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
@@ -123,7 +130,7 @@ export default function ProductDetails() {
             </TouchableOpacity>
             <TouchableOpacity
               className="p-2 rounded-full bg-white/80 shadow"
-              onPress={() => toggleWishlist(product)}
+              onPress={() => handleWishlistToggle()}
             >
               <Ionicons
                 name={isLiked ? "heart" : "heart-outline"}

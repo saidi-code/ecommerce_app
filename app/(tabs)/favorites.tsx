@@ -1,24 +1,24 @@
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
-import { useWishList } from "@/context/WishListContext";
+import { useWishlist } from "@/context/WishListContext";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function Favorites() {
-  const { wishlist } = useWishList();
+  const { wishlistItems } = useWishlist();
   const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
       <Header title="WishList" showMenu showCart />
-      {wishlist.length > 0 ? (
+      {wishlistItems.length > 0 ? (
         <ScrollView
           className="flex-1 px-4 mt-4"
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-row flex-wrap justify-between">
-            {wishlist.map((product) => (
-              <ProductCard key={product._id} product={product} />
+            {wishlistItems.map((item) => (
+              <ProductCard key={item.id} product={item.product} />
             ))}
           </View>
         </ScrollView>

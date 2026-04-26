@@ -161,107 +161,110 @@ export default function Checkout() {
           </TouchableOpacity>
         )}
         {/* Payment section  */}
-        <Text className=" text-lg font-bold text-primary mb-4">
-          Payment Method
-        </Text>
-        {/* Cash on delivery option */}
-        <TouchableOpacity
-          onpress={() => setPaymentMethod("cash")}
-          className={`bg-white p-4 shadow-sm rounded-xl mb-4 flex-row items-center border-2 ${paymentMethod === "cash" ? "border-primary" : "border-transparent"}`}
-          onPress={() => setPaymentMethod("cash")}
-        >
-          <Ionicons
-            name="cash-outline"
-            size={24}
-            color={COLORS.primary}
-            className="mr-3"
-          />
-          <View className="ml-3 flex-1">
-            <Text className="text-base font-bold text-primary">
-              Cash on Delivery
-            </Text>
-            <Text className="text-secondary text-xs mt-1">
-              Pay when you receive the order
-            </Text>
-          </View>
-          {paymentMethod === "cash" && (
+        <View className="flex-1 mb-6">
+          <Text className=" text-lg font-bold text-primary mb-4">
+            Payment Method
+          </Text>
+          {/* Cash on delivery option */}
+          <TouchableOpacity
+            onpress={() => setPaymentMethod("cash")}
+            className={`bg-white p-4 shadow-sm rounded-xl mb-4 flex-row items-center border-2 ${paymentMethod === "cash" ? "border-primary" : "border-transparent"}`}
+            onPress={() => setPaymentMethod("cash")}
+          >
             <Ionicons
-              name="checkmark-circle"
+              name="cash-outline"
               size={24}
               color={COLORS.primary}
+              className="mr-3"
             />
-          )}
-        </TouchableOpacity>
-        {/* Stripe option (disabled) */}
-        <TouchableOpacity
-          onpress={() => setPaymentMethod("stripe")}
-          className={`bg-white p-4 shadow-sm rounded-xl mb-4 flex-row items-center border-2 ${paymentMethod === "stripe" ? "border-primary" : "border-transparent"}`}
-          onPress={() => setPaymentMethod("stripe")}
-        >
-          <Ionicons
-            name="card-outline"
-            size={24}
-            color={COLORS.primary}
-            className="mr-3"
-          />
-          <View className="ml-3 flex-1">
-            <Text className="text-base font-bold text-primary">
-              Pay with Card
-            </Text>
-            <Text className="text-secondary text-xs mt-1">
-              Credit or Debit Card
-            </Text>
-          </View>
-          {paymentMethod === "stripe" && (
+            <View className="ml-3 flex-1">
+              <Text className="text-base font-bold text-primary">
+                Cash on Delivery
+              </Text>
+              <Text className="text-secondary text-xs mt-1">
+                Pay when you receive the order
+              </Text>
+            </View>
+            {paymentMethod === "cash" && (
+              <Ionicons
+                name="checkmark-circle"
+                size={24}
+                color={COLORS.primary}
+              />
+            )}
+          </TouchableOpacity>
+          {/* Stripe option (disabled) */}
+          <TouchableOpacity
+            onpress={() => setPaymentMethod("stripe")}
+            className={`bg-white p-4 shadow-sm rounded-xl mb-4 flex-row items-center border-2 ${paymentMethod === "stripe" ? "border-primary" : "border-transparent"}`}
+            onPress={() => setPaymentMethod("stripe")}
+          >
             <Ionicons
-              name="checkmark-circle"
+              name="card-outline"
               size={24}
               color={COLORS.primary}
+              className="mr-3"
             />
-          )}
-        </TouchableOpacity>
-      </ScrollView>
-      {/* order summary */}
-      <View className="bg-white p-4 shadow-lg border-t border-gray-100">
-        <Text className=" text-lg font-bold text-primary mb-4">
-          Order Summary
-        </Text>
-        {/* Subtotal */}
-        <View className="flex-row  justify-between mb-2">
-          <Text className="text-secondary">Subtotal</Text>
-          <Text className="font-bold">${cartTotal.toFixed(2)}</Text>
-        </View>
-        {/* Shipping */}
-        <View className="flex-row  justify-between mb-2">
-          <Text className="text-secondary">Shipping</Text>
-          <Text className="font-bold">${shipping.toFixed(2)}</Text>
-        </View>
-        {/* Tax */}
-        <View className="flex-row  justify-between mb-4">
-          <Text className="text-secondary">Tax</Text>
-          <Text className="font-bold">${tax.toFixed(2)}</Text>
+            <View className="ml-3 flex-1">
+              <Text className="text-base font-bold text-primary">
+                Pay with Card
+              </Text>
+              <Text className="text-secondary text-xs mt-1">
+                Credit or Debit Card
+              </Text>
+            </View>
+            {paymentMethod === "stripe" && (
+              <Ionicons
+                name="checkmark-circle"
+                size={24}
+                color={COLORS.primary}
+              />
+            )}
+          </TouchableOpacity>
+          {/* order summary */}
         </View>
 
-        {/* Total */}
-        <View className="flex-row  justify-between mb-6">
-          <Text className="text-primary font-bold text-xl">Total</Text>
-          <Text className="text-primary font-bold text-xl">
-            ${total.toFixed(2)}
+        <View className="bg-white p-4 shadow-lg border-t border-gray-100">
+          <Text className=" text-lg font-bold text-primary mb-4">
+            Order Summary
           </Text>
+          {/* Subtotal */}
+          <View className="flex-row  justify-between mb-2">
+            <Text className="text-secondary">Subtotal</Text>
+            <Text className="font-bold">${cartTotal.toFixed(2)}</Text>
+          </View>
+          {/* Shipping */}
+          <View className="flex-row  justify-between mb-2">
+            <Text className="text-secondary">Shipping</Text>
+            <Text className="font-bold">${shipping.toFixed(2)}</Text>
+          </View>
+          {/* Tax */}
+          <View className="flex-row  justify-between mb-4">
+            <Text className="text-secondary">Tax</Text>
+            <Text className="font-bold">${tax.toFixed(2)}</Text>
+          </View>
+
+          {/* Total */}
+          <View className="flex-row  justify-between mb-6">
+            <Text className="text-primary font-bold text-xl">Total</Text>
+            <Text className="text-primary font-bold text-xl">
+              ${total.toFixed(2)}
+            </Text>
+          </View>
+          {/* Place Order Button */}
+          <TouchableOpacity
+            className={`p-4 rounded-xl items-center bg-primary ${loading ? "opacity-70" : "opacity-100"}`}
+            onPress={handlePlaceOrder}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text className="text-white font-bold text-lg">Place Order</Text>
+            )}
+          </TouchableOpacity>
         </View>
-        {/* Place Order Button */}
-        <TouchableOpacity
-          className={`p-4 rounded-xl items-center bg-primary ${loading ? "opacity-70" : "opacity-100"}`}
-          onPress={handlePlaceOrder}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text className="text-white font-bold text-lg">Place Order</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

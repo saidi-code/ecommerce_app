@@ -105,7 +105,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         },
       );
       if (data.success || data.sucess) {
-        console.log(data);
         Toast.show({
           type: "success",
           text1: "Added to Cart",
@@ -113,7 +112,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         });
         await fetchCart();
       }
-    } catch (error) {
+    } catch (error: any) {
       Toast.show({
         type: "error",
         text1: "Failed to Add to Cart",

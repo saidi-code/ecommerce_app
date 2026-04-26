@@ -190,7 +190,7 @@ export default function Addresses() {
                       color={COLORS.primary}
                     />
                     <Text className="text-base font-bold text-primary ml-2">
-                      {item.type}
+                      {item?.type}
                     </Text>
                     {item.isDefault && (
                       <View className="bg-primary/10 px-2 py-1 rounded ml-2">
@@ -220,7 +220,7 @@ export default function Addresses() {
                   </View>
                 </View>
                 <Text className="text-secondary leading-5 ml-7">
-                  {item.street}, {item.city}, {item.state} {item.zipCode},{" "}
+                  {item?.street}, {item.city}, {item.state} {item.zipCode},{" "}
                   {item.country}
                 </Text>
               </View>

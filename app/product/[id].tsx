@@ -19,7 +19,7 @@ import Toast from "react-native-toast-message";
 import axios from "../../constants/api";
 export default function ProductDetails() {
   const { id } = useLocalSearchParams();
-  const width = Dimensions.get("window").width;
+  const screenWidth = Dimensions.get("window").width;
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -92,6 +92,7 @@ export default function ProductDetails() {
       await addToWishlist(product);
     }
   };
+
   return (
     <SafeAreaView className="flex-1 bg-white ">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
@@ -111,10 +112,14 @@ export default function ProductDetails() {
             }}
           >
             {product.images?.map((img: string, index: number) => (
-              <View key={index} className="w-full h-full">
+              <View
+                key={index}
+                className="h-full overflow-hidden"
+                style={{ width: screenWidth }}
+              >
                 <Image
                   source={{ uri: img }}
-                  style={{ width: width, height: 450 }}
+                  className="w-full h-full"
                   resizeMode="cover"
                 />
               </View>

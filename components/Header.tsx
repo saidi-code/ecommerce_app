@@ -16,27 +16,27 @@ export default function Header({
   const router = useRouter();
   const { itemCount } = useCart();
   return (
-    <View className=" flex flex-row  items-center justify-between px-4 py-5 bg-white shadow">
+    <View className=" flex flex-row  items-center justify-between px-2 py-5 bg-white shadow">
       {/* left side */}
-      <View className="flex flex-row items-center flex-1 ">
+      <View className="flex flex-row  items-start justify-start flex-1 ">
         {showBack && (
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
             <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
           </TouchableOpacity>
         )}
-        {showMenu && (
+        {/* {showMenu && (
           <TouchableOpacity
             onPress={() => console.log("menu opened")}
             className="mr-3"
           >
             <Ionicons name="menu-outline" size={24} color={COLORS.primary} />
           </TouchableOpacity>
-        )}
+        )} */}
         {showLogo ? (
           <View className="flex-1">
             <Image
               source={require("@/assets/images/logo.png")}
-              style={{ width: "100%", height: 18 }}
+              style={{ width: 100, height: 24 }}
               resizeMode="contain"
             />
           </View>

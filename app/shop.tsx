@@ -24,7 +24,7 @@ export default function Shop() {
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
-  const [statusModalVisible, setStatusModalVisible] = React.useState(true);
+  const [statusModalVisible, setStatusModalVisible] = React.useState(false);
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([
     "All",
   ]);

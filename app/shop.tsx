@@ -7,7 +7,6 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import React, { useEffect } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   Modal,
   ScrollView,
@@ -34,7 +33,7 @@ export default function Shop() {
     10, 1000,
   ]);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const screenWidth = Dimensions.get("window").width;
+
   const isCategorySelected = (category: string) => {
     return selectedCategories.includes(category);
   };
@@ -64,31 +63,6 @@ export default function Shop() {
       setLoading(false);
       setLoadingMore(false);
     }
-    // if (fetchInFlight.current) return;
-    // fetchInFlight.current = true;
-    // if (pageNumber === 1) {
-    //   setLoading(true);
-    // } else {
-    //   setLoadingMore(true);
-    // }
-    // try {
-    //   const start = (pageNumber - 1) * 10;
-    //   const end = start + 10;
-    //   const paginatedData = dummyProducts.slice(start, end);
-    //   if (pageNumber === 1) {
-    //     setProducts(paginatedData);
-    //   } else {
-    //     setProducts((prev) => [...prev, ...paginatedData]);
-    //   }
-    //   setHasMore(end < dummyProducts.length);
-    //   setPage(pageNumber);
-    // } catch (error) {
-    //   console.error("Error fetching products:", error);
-    // } finally {
-    //   fetchInFlight.current = false;
-    //   setLoading(false);
-    //   setLoadingMore(false);
-    // }
   };
   const CATEGORIES = ["All", "Men", "Women", "Kids", "Shoes", "Bags", "Other"];
   const SIZES = ["All", "S", "M", "L", "XXL", "XXXL"];
@@ -112,11 +86,12 @@ export default function Shop() {
       // You can make an API call here to fetch filtered products based on the selected filters
       const { data } = await axios.get("/products", { params: filters });
       setProducts(data.data);
+      setPage(1);
+      setHasMore(data.pagination?.page < data.pagination?.pages);
       setStatusModalVisible(false);
     } catch (error) {
       console.error("Error applying filters:", error);
     }
-    setStatusModalVisible(false);
   };
   const handleResetFilters = async () => {
     setSelectedCategories(["All"]);
@@ -225,233 +200,233 @@ export default function Shop() {
       >
         <TouchableWithoutFeedback onPress={() => setStatusModalVisible(false)}>
           <View className="flex-1 justify-end bg-black/50">
-            <View className="bg-white rounded-t-2xl p-4 max-h-[60%]">
-              <View className="flex-row justify-between items-center mb-4 pb-4 border-b border-gray-100">
-                <Text className="text-lg font-bold text-primary">
-                  Filter Products
-                </Text>
-                <TouchableOpacity onPress={() => setStatusModalVisible(false)}>
-                  <Ionicons name="close" size={24} color={COLORS.secondary} />
-                </TouchableOpacity>
-              </View>
-              <ScrollView className="" showsVerticalScrollIndicator={false}>
-                <View className="flex-1">
-                  {/* Filter options */}
-                  <View className="flex-row items-center mb-3">
-                    <Ionicons
-                      name="pricetags-outline"
-                      size={20}
-                      color={COLORS.secondary}
-                    />
-                    <Text className="text-secondary text-sm ml-2">
-                      By Category
-                    </Text>
-                  </View>
-                  {/* filter by Category */}
-                  <View className="flex-wrap flex-row   items-center mb-3 ">
-                    {CATEGORIES.map((cat, idx) => (
-                      <TouchableOpacity
-                        key={idx}
-                        className={`px-3 py-1  ${isCategorySelected(cat) ? "bg-primary" : "bg-gray-300"} rounded-full mr-2 mb-2`}
-                        onPress={() => {
-                          if (cat === "All") {
-                            setSelectedCategories(["All"]);
-                          } else {
-                            if (isCategorySelected(cat)) {
-                              const newCategories = selectedCategories.filter(
-                                (c) => c !== cat,
-                              );
-                              setSelectedCategories(
-                                newCategories.length > 0
-                                  ? newCategories
-                                  : ["All"],
-                              );
+            <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+              <View className="bg-white rounded-t-2xl p-4 max-h-[60%]">
+                <View className="flex-row justify-between items-center mb-4 pb-4 border-b border-gray-100">
+                  <Text className="text-lg font-bold text-primary">
+                    Filter Products
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setStatusModalVisible(false)}
+                  >
+                    <Ionicons name="close" size={24} color={COLORS.secondary} />
+                  </TouchableOpacity>
+                </View>
+                <ScrollView className="" showsVerticalScrollIndicator={false}>
+                  <View className="flex-1">
+                    {/* Filter options */}
+                    <View className="flex-row items-center mb-3">
+                      <Ionicons
+                        name="pricetags-outline"
+                        size={20}
+                        color={COLORS.secondary}
+                      />
+                      <Text className="text-secondary text-sm ml-2">
+                        By Category
+                      </Text>
+                    </View>
+                    {/* filter by Category */}
+                    <View className="flex-wrap flex-row   items-center mb-3 ">
+                      {CATEGORIES.map((cat, idx) => (
+                        <TouchableOpacity
+                          key={idx}
+                          className={`px-3 py-1  ${isCategorySelected(cat) ? "bg-primary" : "bg-gray-300"} rounded-full mr-2 mb-2`}
+                          onPress={() => {
+                            if (cat === "All") {
+                              setSelectedCategories(["All"]);
                             } else {
-                              setSelectedCategories([
-                                ...selectedCategories.filter(
-                                  (c) => c !== "All",
-                                ),
-                                cat,
-                              ]);
+                              if (isCategorySelected(cat)) {
+                                const newCategories = selectedCategories.filter(
+                                  (c) => c !== cat,
+                                );
+                                setSelectedCategories(
+                                  newCategories.length > 0
+                                    ? newCategories
+                                    : ["All"],
+                                );
+                              } else {
+                                setSelectedCategories([
+                                  ...selectedCategories.filter(
+                                    (c) => c !== "All",
+                                  ),
+                                  cat,
+                                ]);
+                              }
                             }
-                          }
-                        }}
-                      >
-                        <View className="flex-row items-center">
-                          {isCategorySelected(cat) ? (
-                            <Ionicons
-                              name="checkmark"
-                              size={16}
-                              color="#FFF"
-                              className="mr-1"
-                            />
-                          ) : (
-                            <Ionicons
-                              name="ellipse-outline"
-                              size={16}
-                              color={COLORS.primary}
-                              className="mr-1"
-                            />
-                          )}
+                          }}
+                        >
+                          <View className="flex-row items-center">
+                            {isCategorySelected(cat) ? (
+                              <Ionicons
+                                name="checkmark"
+                                size={16}
+                                color="#FFF"
+                                className="mr-1"
+                              />
+                            ) : (
+                              <Ionicons
+                                name="ellipse-outline"
+                                size={16}
+                                color={COLORS.primary}
+                                className="mr-1"
+                              />
+                            )}
 
-                          <Text
-                            className={`text-sm ${isCategorySelected(cat) ? "text-white" : "text-primary"}`}
-                          >
-                            {cat}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  {/* Filter by Sizes  */}
+                            <Text
+                              className={`text-sm ${isCategorySelected(cat) ? "text-white" : "text-primary"}`}
+                            >
+                              {cat}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                    {/* Filter by Sizes  */}
 
-                  <View className="flex-row items-center mb-3">
-                    <Ionicons
-                      name="resize-outline"
-                      size={20}
-                      color={COLORS.secondary}
-                    />
-                    <Text className="text-secondary text-sm ml-2">By Size</Text>
-                  </View>
-                  <View className="flex-wrap flex-row  flex-1 items-center mb-3">
-                    {SIZES.map((size, idx) => (
-                      <TouchableOpacity
-                        key={idx}
-                        className={`px-3 py-1  ${selectedSizes.includes(size) ? "bg-primary" : "bg-gray-300"} rounded-md mr-2 mb-2`}
-                        onPress={() => {
-                          if (size === "All") {
-                            setSelectedSizes(["All"]);
-                          } else {
-                            if (selectedSizes.includes(size)) {
-                              const newSizes = selectedSizes.filter(
-                                (s) => s !== size,
-                              );
-                              setSelectedSizes(
-                                newSizes.length > 0 ? newSizes : ["All"],
-                              );
+                    <View className="flex-row items-center mb-3">
+                      <Ionicons
+                        name="resize-outline"
+                        size={20}
+                        color={COLORS.secondary}
+                      />
+                      <Text className="text-secondary text-sm ml-2">
+                        By Size
+                      </Text>
+                    </View>
+                    <View className="flex-wrap flex-row  flex-1 items-center mb-3">
+                      {SIZES.map((size, idx) => (
+                        <TouchableOpacity
+                          key={idx}
+                          className={`px-3 py-1  ${selectedSizes.includes(size) ? "bg-primary" : "bg-gray-300"} rounded-md mr-2 mb-2`}
+                          onPress={() => {
+                            if (size === "All") {
+                              setSelectedSizes(["All"]);
                             } else {
-                              setSelectedSizes([
-                                ...selectedSizes.filter((s) => s !== "All"),
-                                size,
-                              ]);
+                              if (selectedSizes.includes(size)) {
+                                const newSizes = selectedSizes.filter(
+                                  (s) => s !== size,
+                                );
+                                setSelectedSizes(
+                                  newSizes.length > 0 ? newSizes : ["All"],
+                                );
+                              } else {
+                                setSelectedSizes([
+                                  ...selectedSizes.filter((s) => s !== "All"),
+                                  size,
+                                ]);
+                              }
                             }
-                          }
+                          }}
+                        >
+                          <View className="flex-row items-center">
+                            {selectedSizes.includes(size) ? (
+                              <Ionicons
+                                name="checkmark"
+                                size={16}
+                                color="#FFF"
+                                className="mr-1"
+                              />
+                            ) : (
+                              <Ionicons
+                                name="ellipse-outline"
+                                size={16}
+                                color={COLORS.primary}
+                                className="mr-1"
+                              />
+                            )}
+                            <Text
+                              className={`text-sm ${selectedSizes.includes(size) ? "text-white" : "text-primary"}`}
+                            >
+                              {size}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                    {/* Filter by Price Range */}
+                    <View className="flex-row items-center mb-3">
+                      <Ionicons
+                        name="cash-outline"
+                        size={20}
+                        color={COLORS.secondary}
+                      />
+                      <Text className="text-secondary text-sm ml-2">
+                        By Price
+                      </Text>
+                    </View>
+                    <View className="flex-1 ml-4">
+                      <MultiSlider
+                        values={[priceRange[0], priceRange[1]]}
+                        min={10}
+                        max={1000}
+                        step={10}
+                        allowOverlap={false}
+                        snapped
+                        onValuesChange={(values: number[]) =>
+                          setPriceRange([values[0], values[1]])
+                        }
+                        selectedStyle={{ backgroundColor: COLORS.accent }}
+                        unselectedStyle={{ backgroundColor: COLORS.secondary }}
+                        markerStyle={{
+                          backgroundColor: COLORS.primary,
+                          height: 24,
+                          width: 24,
+                          borderRadius: 12,
                         }}
-                      >
-                        <View className="flex-row items-center">
-                          {selectedSizes.includes(size) ? (
-                            <Ionicons
-                              name="checkmark"
-                              size={16}
-                              color="#FFF"
-                              className="mr-1"
-                            />
-                          ) : (
-                            <Ionicons
-                              name="ellipse-outline"
-                              size={16}
-                              color={COLORS.primary}
-                              className="mr-1"
-                            />
-                          )}
-                          <Text
-                            className={`text-sm ${selectedSizes.includes(size) ? "text-white" : "text-primary"}`}
-                          >
-                            {size}
+                      />
+                    </View>
+
+                    <View className="flex-row justify-between items-center mb-6">
+                      <Text className="text-secondary text-sm ml-2">
+                        Price : ${priceRange[0]} - ${priceRange[1]}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row items-center justify-between mb-3">
+                      <View className="flex-row items-center ">
+                        <TouchableOpacity
+                          onPress={handleFilterApply}
+                          className={`flex-row items-center px-3 py-1 rounded-full   bg-primary`}
+                        >
+                          <Ionicons
+                            name="checkmark-outline"
+                            size={20}
+                            color="#FFF"
+                          />
+                          <Text className="text-white text-sm ">Apply</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          className="flex-row items-center px-3 py-1 rounded-full ml-2 bg-gray-300 "
+                          onPress={() => setStatusModalVisible(false)}
+                        >
+                          <Ionicons
+                            name="close-outline"
+                            size={20}
+                            color={COLORS.secondary}
+                          />
+                          <Text className="text-secondary text-sm ">
+                            Cancel
                           </Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  {/* Filter by Price Range */}
-                  <View className="flex-row items-center mb-3">
-                    <Ionicons
-                      name="cash-outline"
-                      size={20}
-                      color={COLORS.secondary}
-                    />
-                    <Text className="text-secondary text-sm ml-2">
-                      By Price
-                    </Text>
-                  </View>
-                  <View className="flex-1 ml-4">
-                    <MultiSlider
-                      // sliderLength={screenWidth}
-                      values={[priceRange[0], priceRange[1]]}
-                      min={10}
-                      max={1000}
-                      step={10}
-                      allowOverlap={false}
-                      snapped
-                      onValuesChange={(values: number[]) =>
-                        setPriceRange([values[0], values[1]])
-                      }
-                      selectedStyle={{ backgroundColor: COLORS.accent }}
-                      unselectedStyle={{ backgroundColor: COLORS.secondary }}
-                      markerStyle={{
-                        backgroundColor: COLORS.primary,
-                        height: 24,
-                        width: 24,
-                        borderRadius: 12,
-                      }}
-                    />
-                  </View>
-
-                  <View className="flex-row justify-between items-center mb-6">
-                    <Text className="text-secondary text-sm ml-2">
-                      Price : ${priceRange[0]} - ${priceRange[1]}
-                    </Text>
-                  </View>
-
-                  <View className="flex-row items-center justify-between mb-3">
-                    <View className="flex-row items-center ">
+                        </TouchableOpacity>
+                      </View>
                       <TouchableOpacity
-                        onPress={handleFilterApply}
-                        className={`flex-row items-center px-3 py-1 rounded-full   bg-primary`}
+                        onPress={handleResetFilters}
+                        className="flex-row items-center "
                       >
                         <Ionicons
-                          name="checkmark-outline"
+                          name="refresh-outline"
                           size={20}
-                          color="#FFF"
+                          color="#FF4C3B"
                         />
-                        <Text className="text-white text-sm ">Apply</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        className="flex-row items-center px-3 py-1 rounded-full ml-2 bg-gray-300 "
-                        onPress={() => setStatusModalVisible(false)}
-                      >
-                        <Ionicons
-                          name="close-outline"
-                          size={20}
-                          color={COLORS.secondary}
-                        />
-                        <Text className="text-secondary text-sm ">Cancel</Text>
+                        <Text className="text-accent text-sm ml-2">
+                          Reset Filters
+                        </Text>
                       </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                      onPress={handleResetFilters}
-                      className="flex-row items-center "
-                    >
-                      <Ionicons
-                        name="refresh-outline"
-                        size={20}
-                        color="#FF4C3B"
-                      />
-                      <Text className="text-accent text-sm ml-2">
-                        Reset Filters
-                      </Text>
-                    </TouchableOpacity>
                   </View>
-                  {/* <View
-                  className={`self-start px-3 py-1 rounded-full ${COLORS.secondary} bg-gray-100`}
-                >
-                  <Text className="text-secondary text-sm font-medium">
-                    Reset
-                  </Text>
-                </View> */}
-                </View>
-              </ScrollView>
-            </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>

@@ -35,9 +35,9 @@ export default function Header({
         {showLogo ? (
           <View className="flex-1">
             <Image
-              source={require("@/assets/images/logo.png")}
+              source={require("../assets/images/logo.png")}
               style={{ width: 100, height: 24 }}
-              resizeMode="contain"
+              resizeMode="cover"
             />
           </View>
         ) : (
